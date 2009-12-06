@@ -1,0 +1,6 @@
+dist
+build
+MANIFEST
+*.swp
+*.pyc
+tags
