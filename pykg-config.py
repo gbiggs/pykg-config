@@ -45,7 +45,7 @@ from pykg_config.options import Options
 from pykg_config.version import Version
 from pykg_config.pkgsearcher import PackageNotFoundError, NoOpenableFilesError
 
-PYKG_CONFIG_VERSION = '1.0.0-rc1'
+PYKG_CONFIG_VERSION = '1.0.0'
 CORRESPONDING_VERSION = '0.23'
 
 def setup_option_parser():

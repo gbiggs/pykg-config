@@ -38,11 +38,11 @@ if sys.platform == 'win32':
     scripts.append('pkg-config.bat')
 
 setup(name='pykg-config',
-      version='1.0.0pr1',
+      version='1.0.0',
       description='pkg-config replacement.',
       author='Geoffrey Biggs',
-      author_email='gbiggs@gitourious.org',
-      url='http://www.gitourious.org/pykg-config',
+      author_email='git@killbots.net',
+      url='http://github.com/gbiggs/pykg-config',
       license='BSD',
       classifiers=[
           'Development Status :: 4 - Beta',
