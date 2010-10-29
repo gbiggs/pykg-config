@@ -123,7 +123,9 @@ class Version:
             if m is None:
                 # Stop pulling out components when the start of the string
                 # no longer matches
-                raise BadVersionFormatError(version_string)
+                #raise BadVersionFormatError(version_string)
+                # pkg-config apparently ignores poorly-formatted versions
+                return
             comp = m.group('comp')
             try:
                 comp = int(comp)

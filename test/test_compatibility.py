@@ -46,9 +46,9 @@ import unittest
 class TestCompatibility(unittest.TestCase):
     def setUp(self):
         self.packages = [('playercore', '3.1.0-svn'),
-                         ('hokuyo_aist', '1.0.0'),
-                         ('libxml-2.0', '2.7.3'),
-                         ('QtCore', '4.5.3')]
+                         ('hokuyo_aist', '2.0.0'),
+                         ('libxml-2.0', '2.7.7'),
+                         ('QtCore', '4.6.3')]
         self.error_package = 'thisisabadpkg'
         self.pykg_config_command = '../pykg-config.py'
         self.pkg_config_command = 'pkg-config'

@@ -206,7 +206,8 @@ class Package:
                         include_dir = join(pc_sysrootdir, flag[2:].strip())
                     else:
                         include_dir = flag[2:].strip()
-                    if Options().get_option('full_compatibility'):
+                    if Options().get_option('full_compatibility') and \
+                            include_dir:
                         # Drop everything after the first space when trying
                         # to be fully compatible (sucky behaviour on Win32).
                         include_dir = include_dir.split()[0]
