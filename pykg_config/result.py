@@ -73,8 +73,14 @@ class NoPackagesSpecifiedError(PykgConfigError):
 # Private utility functions
 
 def _filter_duplicates(source):
-    # This doesn't maintain order.
-    return [val for val in source if val not in locals()['_[1]']]
+    # This maintains the order.
+    ret = []
+    seen = { }
+    for it in source:
+         if it not in seen:
+              ret.append(it)
+              seen[it] = 1
+    return ret
 
 ##############################################################################
 # PkgCfgResult object
