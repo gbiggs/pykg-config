@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2009, Geoffrey Biggs
+# Copyright (c) 2009-2012, Geoffrey Biggs
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without

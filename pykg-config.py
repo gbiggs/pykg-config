@@ -46,7 +46,7 @@ from pykg_config.version import Version
 from pykg_config.pkgsearcher import PackageNotFoundError, NoOpenableFilesError
 
 PYKG_CONFIG_VERSION = '1.1.0'
-CORRESPONDING_VERSION = '0.25'
+CORRESPONDING_VERSION = '0.26'
 
 def setup_option_parser():
     # Creates an OptionParser instance with all the options needed.

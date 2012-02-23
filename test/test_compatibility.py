@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2009, Geoffrey Biggs
+# Copyright (c) 2009-2012, Geoffrey Biggs
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -45,10 +45,10 @@ import unittest
 
 class TestCompatibility(unittest.TestCase):
     def setUp(self):
-        self.packages = [('playercore', '3.1.0-svn'),
-                         ('hokuyo_aist', '2.0.0'),
-                         ('libxml-2.0', '2.7.7'),
-                         ('QtCore', '4.6.3')]
+        self.packages = [('dbus-1', '1.4.16'),
+                         ('openssl', '1.0.0g'),
+                         ('libxml-2.0', '2.7.8'),
+                         ('QtCore', '4.7.4')]
         self.error_package = 'thisisabadpkg'
         self.pykg_config_command = '../pykg-config.py'
         self.pkg_config_command = 'pkg-config'
