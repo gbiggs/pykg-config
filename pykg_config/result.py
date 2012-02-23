@@ -76,10 +76,11 @@ def _filter_duplicates(source):
     # This maintains the order.
     ret = []
     seen = { }
-    for it in source:
+    for it in reversed(source):
          if it not in seen:
               ret.append(it)
               seen[it] = 1
+    ret.reverse()
     return ret
 
 ##############################################################################
