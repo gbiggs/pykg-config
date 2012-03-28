@@ -241,7 +241,7 @@ class PkgCfgResult:
         for dep in dependencies:
         # 0. Check if this package is already loaded
             if self._get_loaded_package(dep.name):
-                return
+                continue
         # 1. Search for a package matching the spec
             pkg = self.searcher.search_for_package(dep, self.globals)
         # 2. Check for conflicts
