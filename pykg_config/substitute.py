@@ -77,6 +77,7 @@ def substitute(value, replacements, globals={}):
             value = replace_in_string(value, name, globals[name])
         elif name in replacements:
             value = replace_in_string(value, name, replacements[name])
+    value = collapse_escapes(value)
     return value
 
 
@@ -94,14 +95,17 @@ def get_to_replace_re(name):
     return re.compile('(?<!\$)\$\{%s\}' % name, re.U)
 
 
-substitution_re = re.compile('(?<!\$)\${(?P<name>[\w.]+)\}', re.U)
 def get_all_substitutions(value):
-    found_names = substitution_re.findall(value)
+    found_names = re.findall('(?<!\$)\${(?P<name>[\w.]+)\}', value, flags=re.U)
     names = []
     for name in found_names:
         if name not in names:
             names.append (name)
     return names
+
+
+def collapse_escapes(value):
+    return value.replace('$$', '$')
 
 
 # vim: tw=79

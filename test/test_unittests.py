@@ -110,7 +110,7 @@ class TestSubstitutions(unittest.TestCase):
 
     def test_escaping(self):
         value = 'a $${blag1} that should not be replaced'
-        result = 'a $${blag1} that should not be replaced'
+        result = 'a ${blag1} that should not be replaced'
         self.assertEqual(substitute.substitute(value, self.vars), result)
 
     def test_substitute(self):
