@@ -1,0 +1,4 @@
+Name: GlobalVar
+Description: File for testing global variable replacement
+Version: 1
+CFlags: -I${global_var}
