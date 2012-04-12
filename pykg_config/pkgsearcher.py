@@ -46,6 +46,7 @@ from pykg_config.exceptions import PykgConfigError
 from pykg_config.options import Options
 from pykg_config.errorprinter import ErrorPrinter
 from pykg_config.package import Package
+from pykg_config.substitute import UndefinedVarError
 
 ##############################################################################
 # Exceptions
@@ -129,6 +130,8 @@ class PkgSearcher:
                 ErrorPrinter().verbose_error("Failed to open '{0}': \
 {1}".format(pcfile, e.strerror))
                 continue
+            except UndefinedVarError, e:
+                raise UndefinedVarError(e.variable, pcfile)
         if not pkgs and pcfiles:
             # Raise an error indicating that all pc files we could try were
             # unopenable. This is necessary to match pkg-config's odd lack of
@@ -172,10 +175,12 @@ class PkgSearcher:
 
     def known_packages_list(self):
         """Return a list of all packages found on the system, giving a name and
-        a description (from the .pc file) for each.
+        a description (from the .pc file) for each, and also a list of any
+        errors encountered.
 
         """
         result = []
+        errors = []
         for pkgname in self._known_pkgs:
             # Use the highest-priority version of the package
             try:
@@ -184,8 +189,12 @@ class PkgSearcher:
                 ErrorPrinter().verbose_error("Failed to open '{0}': \
 {1}".format(self._known_pkgs[pkgname][0], e.strerror))
                 continue
+            except UndefinedVarError, e:
+                errors.append("Variable '{0}' not defined in '{1}'".format(e,
+                    self._known_pkgs[pkgname][0]))
+                continue
             result.append((pkgname, pkg.properties['name'], pkg.properties['description']))
-        return result
+        return result, errors
 
     def _init_search_dirs(self):
         # Append dirs in PKG_CONFIG_PATH

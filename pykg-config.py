@@ -44,6 +44,7 @@ from pykg_config.result import PkgCfgResult, NoPackagesSpecifiedError
 from pykg_config.options import Options
 from pykg_config.version import Version
 from pykg_config.pkgsearcher import PackageNotFoundError, NoOpenableFilesError
+from pykg_config.substitute import UndefinedVarError
 
 PYKG_CONFIG_VERSION = '1.1.0'
 CORRESPONDING_VERSION = '0.26'
@@ -277,15 +278,17 @@ def main(argv):
         Options().set_option('command', 'list-all')
         try:
             result = PkgCfgResult(global_variables)
-            all_packages = result.known_packages_list()
+            all_packages, errors = result.known_packages_list()
         except:
-            print 'Exception searching for packages:'
+            ErrorPrinter().error('Exception searching for packages:')
             traceback.print_exc()
             sys.exit(1)
         if all_packages:
             max_width = max([(len(p), p) for p, n, d in all_packages])
             for package, name, description in all_packages:
                 print '{0:{3}}{1} - {2}'.format(package, name, description, max_width[0] + 1)
+        for e in errors:
+            ErrorPrinter().error(e)
         sys.exit(0)
 
     try:
@@ -308,6 +311,10 @@ to the PKG_CONFIG_PATH environment variable'''.format(e.pkgname))
     except NoPackagesSpecifiedError:
         print >>Options().get_option('error_dest'), \
             'Must specify package names on the command line'
+        sys.exit(1)
+    except UndefinedVarError, e:
+        ErrorPrinter().error("Variable '{0}' not defined in '{1}'".format(
+            e.variable, e.pkgfile))
         sys.exit(1)
     except:
         print 'Exception searching for packages'

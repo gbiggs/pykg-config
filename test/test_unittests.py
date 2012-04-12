@@ -34,7 +34,9 @@
 __version__ = "$Revision: $"
 # $Source$
 
+import os
 import re
+import subprocess
 import unittest
 
 from pykg_config import packagespeclist
@@ -103,7 +105,19 @@ class TestPackage(unittest.TestCase):
 
 
 class TestSubstitutions(unittest.TestCase):
+    def call_process(self, args):
+        env = os.environ
+        env['PKG_CONFIG_PATH'] = '{0}:{1}'.format(os.getcwd(),
+                env['PKG_CONFIG_PATH'])
+        process = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        output = process.communicate()
+        output = (output[0].strip(), output[1].strip())
+        return_code = process.returncode
+        return output[0], output[1], return_code
+
     def setUp(self):
+        self.pykg_config_cmd = '../pykg-config.py'
         self.vars = {'blag1': 'not recursive',
                      'blag2': 'references ${blag1} variable',
                      'blag3': 'recursive with ${blag3}'}
@@ -126,6 +140,19 @@ class TestSubstitutions(unittest.TestCase):
         nameful = '${lots} of ${names} ${reffed}.'
         self.assertEqual(substitute.get_all_substitutions(nameful),
                          ['lots', 'names', 'reffed'])
+
+    def test_undefined_var(self):
+        args = ['--cflags', 'global_var']
+        stdout, stderr, ret_code = self.call_process([self.pykg_config_cmd] +
+                args)
+        self.assertEqual(ret_code, 1)
+
+    def test_global_var(self):
+        args = ['--cflags', 'global_var', '--define-variable=global_var=blurg']
+        stdout, stderr, ret_code = self.call_process([self.pykg_config_cmd] +
+                args)
+        self.assertEqual(stdout, '-Iblurg')
+        self.assertEqual(ret_code, 0)
 
 
 if __name__ == '__main__':

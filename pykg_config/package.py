@@ -143,9 +143,9 @@ class Package:
         self.raw_vars, self.variables, \
                 self.raw_props = read_pc_file(filename, global_variables)
         self.filename = filename
-        self._process_props()
+        self._process_props(global_variables)
 
-    def _process_props(self):
+    def _process_props(self, global_variables):
         # Processing of file data
         props = self.raw_props
 
@@ -171,7 +171,8 @@ class Package:
 
         # Perform substitutions
         for key in props:
-            props[key] = substitute(props[key], self.variables)
+            props[key] = substitute(props[key], self.variables,
+                    global_variables)
 
         # Parse the data
         self.properties = deepcopy(empty_processed_props)

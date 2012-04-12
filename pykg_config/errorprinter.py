@@ -62,15 +62,18 @@ class ErrorPrinter(object):
             line = line % args
         print >>Options().get_option('error_dest'), line
 
-    def verbose_error(self, line, args=None):
-        if not Options().get_option('print_errors'):
-            return
+    def error(self, line, args=None):
         if hasattr(self, 'vars'):
             for var in self.vars:
                 line = line.replace('%(' + var + ')', self.vars[var])
         if args is not None:
             line = line % args
         print >>Options().get_option('error_dest'), line
+
+    def verbose_error(self, line, args=None):
+        if not Options().get_option('print_errors'):
+            return
+        self.error(line, args)
 
 
 # vim: tw=79

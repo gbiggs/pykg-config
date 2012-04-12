@@ -62,6 +62,22 @@ class InfiniteRecursionError(PykgConfigError):
         return self.variable
 
 
+class UndefinedVarError(PykgConfigError):
+    """A variable is not defined.
+
+    Attributes:
+        variable -- The variable that is not defined.
+        pkgfile -- The file with the error. Not always set.
+
+    """
+    def __init__(self, variable, pkgfile=None):
+        self.variable = variable
+        self.pkgfile = pkgfile
+
+    def __str__(self):
+        return self.variable
+
+
 ##############################################################################
 # Public functions
 
@@ -77,6 +93,8 @@ def substitute(value, replacements, globals={}):
             value = replace_in_string(value, name, globals[name])
         elif name in replacements:
             value = replace_in_string(value, name, replacements[name])
+        else:
+            raise UndefinedVarError(name)
     value = collapse_escapes(value)
     return value
 
