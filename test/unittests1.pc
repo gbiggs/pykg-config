@@ -1,0 +1,4 @@
+Name: UnitTests1
+Description: File for unit tests, #1
+Version: 1
+CFlags: -DPATH=\"/opt/shaders/\"

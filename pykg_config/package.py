@@ -196,7 +196,7 @@ class Package:
         self._parse_libs(props['libs.private'], dest='private.')
 
     def _parse_cflags(self, value):
-        flags = shlex.split(value)
+        flags = shlex.split(value, posix=False)
         for flag in flags:
             if flag.startswith('-I'):
                 if flag[2:] not in \
