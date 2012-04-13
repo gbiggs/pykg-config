@@ -37,7 +37,7 @@ __version__ = "$Revision: $"
 # $Source$
 
 from os import getenv, listdir
-from os.path import isdir, join, split
+from os.path import isdir, isfile, join, split, splitext
 import sys
 if sys.platform == 'win32':
     import _winreg
@@ -116,8 +116,13 @@ class PkgSearcher:
 
         """
         # Get a list of pc files matching the package name
-        ErrorPrinter().debug_print('Searching for package matching %s', (dep))
-        pcfiles = self.search_for_pcfile(dep.name)
+        if isfile(dep.name) and splitext(dep.name)[1] == '.pc':
+            # No need to search for a pc file
+            ErrorPrinter().debug_print('Using provided pc file %s', (dep.name))
+            pcfiles = [dep.name]
+        else:
+            ErrorPrinter().debug_print('Searching for package matching %s', (dep))
+            pcfiles = self.search_for_pcfile(dep.name)
         ErrorPrinter().debug_print('Found .pc files: %s', (str(pcfiles)))
         if not pcfiles:
             raise PackageNotFoundError(str(dep))
