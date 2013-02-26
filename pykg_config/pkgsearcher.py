@@ -83,10 +83,6 @@ class BadPathError(PykgConfigError):
         return 'Bad path: {0}'.format(self.path)
 
 
-class NotADirectoryError(BadPathError):
-    pass
-
-
 class NotAFileError(BadPathError):
     pass
 
@@ -205,18 +201,14 @@ class PkgSearcher:
         # Append dirs in PKG_CONFIG_PATH
         if getenv('PKG_CONFIG_PATH'):
             for dir in getenv('PKG_CONFIG_PATH').split(self._split_char()):
-                if not dir:
+                if not dir or not isdir(dir):
                     continue
-                if not isdir(dir):
-                    raise NotADirectoryError(dir)
                 self._append_packages(dir)
         # Append dirs in PKG_CONFIG_LIBDIR
         if getenv('PKG_CONFIG_LIBDIR'):
             for dir in getenv('PKG_CONFIG_LIBDIR').split(self._split_char()):
-                if not dir:
+                if not dir or not isdir(dir):
                     continue
-                if not isdir(dir):
-                    raise NotADirectoryError(dir)
                 self._append_packages(dir)
         # Else append prefix/lib/pkgconfig, prefix/share/pkgconfig
         else:
