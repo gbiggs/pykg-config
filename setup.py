@@ -38,7 +38,7 @@ if sys.platform == 'win32':
     scripts.append('pkg-config.bat')
 
 setup(name='pykg-config',
-      version='1.1.0',
+      version='1.2.0',
       description='pkg-config replacement.',
       author='Geoffrey Biggs',
       author_email='git@killbots.net',
