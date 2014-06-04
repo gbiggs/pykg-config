@@ -142,7 +142,7 @@ class Package:
         """Load data from a package config file and process it."""
         self.raw_vars, self.variables, \
                 self.raw_props = read_pc_file(filename, global_variables)
-        self.filename = filename
+        self._filename = filename
         self._process_props(global_variables)
 
     def _process_props(self, global_variables):
