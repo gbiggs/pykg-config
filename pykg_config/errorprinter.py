@@ -60,7 +60,7 @@ class ErrorPrinter(object):
                 line = line.replace('%(' + var + ')', self.vars[var])
         if args is not None:
             line = line % args
-        print >>Options().get_option('error_dest'), line
+        Options().get_option('error_dest').write(line + '\n')
 
     def error(self, line, args=None):
         if hasattr(self, 'vars'):
@@ -68,7 +68,7 @@ class ErrorPrinter(object):
                 line = line.replace('%(' + var + ')', self.vars[var])
         if args is not None:
             line = line % args
-        print >>Options().get_option('error_dest'), line
+        Options().get_option('error_dest').write(line + '\n')
 
     def verbose_error(self, line, args=None):
         if not Options().get_option('print_errors'):
