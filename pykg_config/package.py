@@ -182,7 +182,7 @@ class Package:
         if props['version']:
             try:
                 self.properties['version'] = Version(props['version'])
-            except BadVersionFormatError, e:
+            except BadVersionFormatError as e:
                 raise BadVersionFormatError(e.versionstring, props['name'])
         self.properties['requires'] = \
                 parse_package_spec_list(props['requires'])

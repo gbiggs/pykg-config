@@ -175,7 +175,7 @@ def main(argv):
     parser = setup_option_parser()
     try:
         options, args = parser.parse_args()
-    except OptionError, e:
+    except OptionError as e:
         print 'OptionError: ' + str (e)
         sys.exit(1)
 
@@ -297,10 +297,10 @@ def main(argv):
         Options().set_option('search_string', search)
         result = PkgCfgResult(global_variables)
         result.find_packages(search, True)
-    except NoOpenableFilesError, e:
+    except NoOpenableFilesError as e:
         ErrorPrinter().verbose_error(str(e))
         sys.exit(1)
-    except PackageNotFoundError, e:
+    except PackageNotFoundError as e:
         if not Options().get_option('short_errors'):
             ErrorPrinter().verbose_error('''Package {0} was not found in the \
 pkg-config search path.
@@ -312,7 +312,7 @@ to the PKG_CONFIG_PATH environment variable'''.format(e.pkgname))
         print >>Options().get_option('error_dest'), \
             'Must specify package names on the command line'
         sys.exit(1)
-    except UndefinedVarError, e:
+    except UndefinedVarError as e:
         ErrorPrinter().error("Variable '{0}' not defined in '{1}'".format(
             e.variable, e.pkgfile))
         sys.exit(1)

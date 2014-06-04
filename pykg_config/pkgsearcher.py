@@ -127,11 +127,11 @@ class PkgSearcher:
         for pcfile in pcfiles:
             try:
                 pkgs.append(Package(pcfile, globals))
-            except IOError, e:
+            except IOError as e:
                 ErrorPrinter().verbose_error("Failed to open '{0}': \
 {1}".format(pcfile, e.strerror))
                 continue
-            except UndefinedVarError, e:
+            except UndefinedVarError as e:
                 raise UndefinedVarError(e.variable, pcfile)
         if not pkgs and pcfiles:
             # Raise an error indicating that all pc files we could try were
@@ -186,11 +186,11 @@ class PkgSearcher:
             # Use the highest-priority version of the package
             try:
                 pkg = Package(self._known_pkgs[pkgname][0])
-            except IOError, e:
+            except IOError as e:
                 ErrorPrinter().verbose_error("Failed to open '{0}': \
 {1}".format(self._known_pkgs[pkgname][0], e.strerror))
                 continue
-            except UndefinedVarError, e:
+            except UndefinedVarError as e:
                 errors.append("Variable '{0}' not defined in '{1}'".format(e,
                     self._known_pkgs[pkgname][0]))
                 continue
@@ -227,7 +227,7 @@ class PkgSearcher:
                          (_winreg.HKEY_LOCAL_MACHINE, 'HKEY_LOCAL_MACHINE')):
                 try:
                     key = _winreg.OpenKey(root[0], key_path)
-                except WindowsError, e:
+                except WindowsError as e:
                     ErrorPrinter().debug_print('Failed to add paths from \
 {0}\\{1}: {2}'.format(root[1], key_path, e))
                     continue
@@ -237,7 +237,7 @@ class PkgSearcher:
                         name, val, type = _winreg.EnumValue(key, ii)
                         if type == _winreg.REG_SZ:
                             self._append_packages(val)
-                except WindowsError, e:
+                except WindowsError as e:
                     ErrorPrinter().debug_print('Failed to add paths from \
 {0}\\{1}: {2}'.format(root[1], key_path, e))
                 finally:
@@ -270,7 +270,7 @@ class PkgSearcher:
     def _can_open_file(self, filename):
         try:
             result = open(filename, 'r')
-        except IOError, e:
+        except IOError as e:
             ErrorPrinter().debug_print('Could not open {0}'.format(filename))
             search_string = Options().get_option('search_string').split()
             if (not search_string and \
