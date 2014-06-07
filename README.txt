@@ -13,9 +13,8 @@ Requirements
 ------------
 
 pykg-config uses the new string formatting operations that were introduced in
-Python 2.6. It will not function with an earlier version of Python. It has not
-been tested with Python 3 and it is likely that several changes will be
-necessary to make it function using this version of Python.
+Python 2.6. It will not function with an earlier version of Python. It has been
+been tested with Python 2.6, 2.7, 3.1, 3.2, 3.3, and 3.4.
 
 
 Installation

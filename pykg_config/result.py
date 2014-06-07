@@ -122,7 +122,7 @@ class PkgCfgResult:
 
     def dump_package(self):
         for pkg in self.searched_packages:
-            print self._get_loaded_package(pkg.name)
+            print(self._get_loaded_package(pkg.name))
 
     def get_big_i_flags(self):
         result = []

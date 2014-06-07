@@ -175,13 +175,13 @@ def main(argv):
     parser = setup_option_parser()
     try:
         options, args = parser.parse_args()
-    except OptionError, e:
-        print 'OptionError: ' + str (e)
+    except OptionError as e:
+        print('OptionError: ' + str (e))
         sys.exit(1)
 
     if options.realversion:
-        print '{0} (Equivalent to {1}'.format(PYKG_CONFIG_VERSION,
-                                              CORRESPONDING_VERSION)
+        print('{0} (Equivalent to {1}'.format(PYKG_CONFIG_VERSION,
+                                              CORRESPONDING_VERSION))
         sys.exit(0)
 
     global_variables = {}
@@ -237,7 +237,7 @@ def main(argv):
         for var_def in options.define_variable:
             sub_strings = var_def.split('=')
             if len(sub_strings) != 2:
-                print 'Bad argument format for define-variable: {1}'.format(var_def)
+                print('Bad argument format for define-variable: {1}'.format(var_def))
                 sys.exit(1)
             global_variables[sub_strings[0]] = sub_strings[1]
     if options.debug:
@@ -286,7 +286,7 @@ def main(argv):
         if all_packages:
             max_width = max([(len(p), p) for p, n, d in all_packages])
             for package, name, description in all_packages:
-                print '{0:{3}}{1} - {2}'.format(package, name, description, max_width[0] + 1)
+                print('{0:{3}}{1} - {2}'.format(package, name, description, max_width[0] + 1))
         for e in errors:
             ErrorPrinter().error(e)
         sys.exit(0)
@@ -297,10 +297,10 @@ def main(argv):
         Options().set_option('search_string', search)
         result = PkgCfgResult(global_variables)
         result.find_packages(search, True)
-    except NoOpenableFilesError, e:
+    except NoOpenableFilesError as e:
         ErrorPrinter().verbose_error(str(e))
         sys.exit(1)
-    except PackageNotFoundError, e:
+    except PackageNotFoundError as e:
         if not Options().get_option('short_errors'):
             ErrorPrinter().verbose_error('''Package {0} was not found in the \
 pkg-config search path.
@@ -309,15 +309,15 @@ to the PKG_CONFIG_PATH environment variable'''.format(e.pkgname))
         ErrorPrinter().verbose_error(str(e))
         sys.exit(1)
     except NoPackagesSpecifiedError:
-        print >>Options().get_option('error_dest'), \
-            'Must specify package names on the command line'
+        Options().get_option('error_dest').write(
+            'Must specify package names on the command line\n')
         sys.exit(1)
-    except UndefinedVarError, e:
+    except UndefinedVarError as e:
         ErrorPrinter().error("Variable '{0}' not defined in '{1}'".format(
             e.variable, e.pkgfile))
         sys.exit(1)
     except:
-        print 'Exception searching for packages'
+        print('Exception searching for packages')
         traceback.print_exc()
         sys.exit(1)
 
@@ -338,7 +338,7 @@ to the PKG_CONFIG_PATH environment variable'''.format(e.pkgname))
 
     if options.modversion:
         for l in result.get_searched_pkgs_versions():
-            print l
+            print(l)
     found_version = \
         result.get_package_version(result.get_searched_pkg_list()[0].name)
     if options.atleast_version:
@@ -357,23 +357,23 @@ to the PKG_CONFIG_PATH environment variable'''.format(e.pkgname))
     if options.variable:
         value = result.get_variable_value(options.variable)
         if value == None:
-            print
+            print('')
         else:
-            print value
+            print(value)
     if options.cflags_only_big_i:
-        print result.get_big_i_flags()
+        print(result.get_big_i_flags())
     if options.cflags_only_other:
-        print result.get_other_i_flags()
+        print(result.get_other_i_flags())
     if options.cflags:
-        print result.get_cflags()
+        print(result.get_cflags())
     if options.libs_only_l:
-        print result.get_l_flags()
+        print(result.get_l_flags())
     if options.libs_only_big_l:
-        print result.get_big_l_flags()
+        print(result.get_big_l_flags())
     if options.libs_only_other:
-        print result.get_other_l_flags()
+        print(result.get_other_l_flags())
     if options.libs:
-        print result.get_all_lib_flags()
+        print(result.get_all_lib_flags())
 
 
 def get_pkg_config_version():

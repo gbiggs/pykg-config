@@ -142,7 +142,7 @@ class Package:
         """Load data from a package config file and process it."""
         self.raw_vars, self.variables, \
                 self.raw_props = read_pc_file(filename, global_variables)
-        self.filename = filename
+        self._filename = filename
         self._process_props(global_variables)
 
     def _process_props(self, global_variables):
@@ -182,7 +182,7 @@ class Package:
         if props['version']:
             try:
                 self.properties['version'] = Version(props['version'])
-            except BadVersionFormatError, e:
+            except BadVersionFormatError as e:
                 raise BadVersionFormatError(e.versionstring, props['name'])
         self.properties['requires'] = \
                 parse_package_spec_list(props['requires'])
