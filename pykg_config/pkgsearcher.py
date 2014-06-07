@@ -48,6 +48,13 @@ from pykg_config.errorprinter import ErrorPrinter
 from pykg_config.package import Package
 from pykg_config.substitute import UndefinedVarError
 
+try:
+    from pykg_config.install_config import pc_path
+except ImportError:
+    # If the install_config module is not available (which is the case when
+    # running from the source instead of an installed version), use defaults
+    pc_path = None
+
 ##############################################################################
 # Exceptions
 
@@ -198,18 +205,24 @@ class PkgSearcher:
         return result, errors
 
     def _init_search_dirs(self):
+        # If a hard-coded path has been set, use that _only_
+        if pc_path:
+            for d in pc_path.split(self._split_char()):
+                self._append_packages(d)
+            return
+        # Otherwise use some suitable defaults
         # Append dirs in PKG_CONFIG_PATH
         if getenv('PKG_CONFIG_PATH'):
-            for dir in getenv('PKG_CONFIG_PATH').split(self._split_char()):
-                if not dir or not isdir(dir):
+            for d in getenv('PKG_CONFIG_PATH').split(self._split_char()):
+                if not d or not isdir(d):
                     continue
-                self._append_packages(dir)
+                self._append_packages(d)
         # Append dirs in PKG_CONFIG_LIBDIR
         if getenv('PKG_CONFIG_LIBDIR'):
-            for dir in getenv('PKG_CONFIG_LIBDIR').split(self._split_char()):
-                if not dir or not isdir(dir):
+            for d in getenv('PKG_CONFIG_LIBDIR').split(self._split_char()):
+                if not d or not isdir(d):
                     continue
-                self._append_packages(dir)
+                self._append_packages(d)
         # Else append prefix/lib/pkgconfig, prefix/share/pkgconfig
         else:
             if Options().get_option('is_64bit'):
@@ -243,15 +256,15 @@ class PkgSearcher:
                 finally:
                     _winreg.CloseKey(key)
 
-    def _append_packages(self, dir):
+    def _append_packages(self, d):
         ErrorPrinter().debug_print('Adding .pc files from %s to known packages',
-                                   (dir))
-        files = listdir(dir)
+                                   (d))
+        files = listdir(d)
         for filename in files:
             if filename.endswith('.pc'):
                 # Test if the file can be opened (pkg-config glosses over,
                 # e.g. links that are now dead, as if they were never there).
-                full_path = join(dir, filename)
+                full_path = join(d, filename)
                 name = filename[:-3]
                 if name in self._known_pkgs:
                     if full_path not in self._known_pkgs[name]:

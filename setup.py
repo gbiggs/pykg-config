@@ -31,11 +31,41 @@ __version__ = "$Revision: $"
 # $Source$
 
 from distutils.core import setup
+from distutils.command.build_py import build_py
+from distutils import log
+import os.path
 import sys
 
 scripts = ['pykg-config.py']
 if sys.platform == 'win32':
     scripts.append('pkg-config.bat')
+
+
+class BuildWithConfigure(build_py):
+    user_options = build_py.user_options + [
+        ('with-pc-path=', None, 'default search path for .pc files'),
+        ]
+
+    def __init__(self, dist):
+        build_py.__init__(self, dist)
+        self.with_pc_path = None
+
+    def finalize_options(self):
+        build_py.finalize_options(self)
+        self.ensure_dirname('with_pc_path')
+
+    def run(self):
+        build_py.run(self)
+        config_dest = os.path.join(self.build_lib, 'pykg_config', 'install_config.py')
+        log.info("creating configuration file at %s", config_dest)
+        with open(config_dest, 'w') as f:
+            if self.with_pc_path:
+                f.write('pc_path = "' + self.with_pc_path + '"\n')
+            else:
+                f.write('pc_path = None\n')
+        # TODO: should byte-compile the config file here (see
+        # build_py.byte_compile())
+
 
 setup(name='pykg-config',
       version='1.2.0',
@@ -60,6 +90,6 @@ setup(name='pykg-config',
           'Topic :: Utilities'
           ],
       packages=['pykg_config'],
-      scripts=scripts
+      scripts=scripts,
+      cmdclass={'build_py':BuildWithConfigure}
       )
-

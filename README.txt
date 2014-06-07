@@ -63,7 +63,9 @@ provided that this directory is in your PATH environment variable.
 Package paths
 -------------
 
-Paths are searched in this order:
+If a hard-coded package search path has been provided (see below), then only
+that path is searched for .pc files. Otherwise, paths are searched in this
+order:
 
 1. All paths listed in the PKG_CONFIG_PATH environment variable.
 2. All paths listed in the PKG_CONFIG_LIBDIR environment variable, if set.
@@ -84,6 +86,19 @@ because Windows does not have a centralised directory structure, you will
 probably have to add every package you install to this variable. If you are
 lucky, some nice packages will do it when they are installed, but I haven't
 yet seen one that does this.
+
+
+Hard-coded package path
+-----------------------
+
+It is possible, when installing using setup.py, to specify a hard-coded list of
+paths to be searched for .pc files. Use the following setup.py command to do
+so:
+
+  python setup.py build_py --with-pc-path=<desired paths here> install
+
+The list of paths should be specified as a single string, with the paths
+separated by a semi-colon (';') on Windows or a colon (':') on other platforms.
 
 
 pkg-config (.pc) file things-to-watch-out-for
