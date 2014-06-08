@@ -68,7 +68,7 @@ class BuildWithConfigure(build_py):
 
 
 setup(name='pykg-config',
-      version='1.2.0',
+      version='1.3.0',
       description='pkg-config replacement.',
       author='Geoffrey Biggs',
       author_email='git@killbots.net',
