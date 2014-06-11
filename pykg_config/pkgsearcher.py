@@ -205,12 +205,6 @@ class PkgSearcher:
         return result, errors
 
     def _init_search_dirs(self):
-        # If a hard-coded path has been set, use that _only_
-        if pc_path:
-            for d in pc_path.split(self._split_char()):
-                self._append_packages(d)
-            return
-        # Otherwise use some suitable defaults
         # Append dirs in PKG_CONFIG_PATH
         if getenv('PKG_CONFIG_PATH'):
             for d in getenv('PKG_CONFIG_PATH').split(self._split_char()):
@@ -223,17 +217,6 @@ class PkgSearcher:
                 if not d or not isdir(d):
                     continue
                 self._append_packages(d)
-        # Else append prefix/lib/pkgconfig, prefix/share/pkgconfig
-        else:
-            if Options().get_option('is_64bit'):
-                suffix = '64'
-            else:
-                suffix = ''
-            if isdir(join(sys.prefix, 'lib' + suffix + '/pkgconfig')):
-                self._append_packages(join(sys.prefix,
-                                           'lib' + suffix + '/pkgconfig'))
-            if isdir(join(sys.prefix, 'share/pkgconfig')):
-                self._append_packages(join(sys.prefix, 'share/pkgconfig'))
         if sys.platform == 'win32':
             key_path = 'Software\\pkg-config\\PKG_CONFIG_PATH'
             for root in ((_winreg.HKEY_CURRENT_USER, 'HKEY_CURRENT_USER'),
@@ -255,6 +238,21 @@ class PkgSearcher:
 {0}\\{1}: {2}'.format(root[1], key_path, e))
                 finally:
                     _winreg.CloseKey(key)
+        # Default path: If a hard-coded path has been set, use that
+        if pc_path:
+            for d in pc_path.split(self._split_char()):
+                self._append_packages(d)
+        # Default path: Else append prefix/lib/pkgconfig, prefix/share/pkgconfig
+        else:
+            if Options().get_option('is_64bit'):
+                suffix = '64'
+            else:
+                suffix = ''
+            if isdir(join(sys.prefix, 'lib' + suffix + '/pkgconfig')):
+                self._append_packages(join(sys.prefix,
+                                           'lib' + suffix + '/pkgconfig'))
+            if isdir(join(sys.prefix, 'share/pkgconfig')):
+                self._append_packages(join(sys.prefix, 'share/pkgconfig'))
 
     def _append_packages(self, d):
         ErrorPrinter().debug_print('Adding .pc files from %s to known packages',
