@@ -66,8 +66,9 @@ class BuildWithConfigure(build_py):
     def finalize_options(self):
         build_py.finalize_options(self)
         # Split the paths by colon and check individually
-        for p in self.with_pc_path.split(split_char()):
-            check_path_is_dir(p)
+        if self.with_pc_path:
+            for p in self.with_pc_path.split(split_char()):
+                check_path_is_dir(p)
 
     def run(self):
         build_py.run(self)
