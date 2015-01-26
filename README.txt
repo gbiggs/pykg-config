@@ -63,21 +63,20 @@ provided that this directory is in your PATH environment variable.
 Package paths
 -------------
 
-If a hard-coded package search path has been provided (see below), then only
-that path is searched for .pc files. Otherwise, paths are searched in this
-order:
+Paths are searched in this order:
 
 1. All paths listed in the PKG_CONFIG_PATH environment variable.
 2. All paths listed in the PKG_CONFIG_LIBDIR environment variable, if set.
-   Otherwise, all paths in ${prefix}/lib[64]/pkgconfig/ and
-   ${prefix}/share/pkgconfig/, where ${prefix} is a system prefix (typically
-   this will be /usr/).
-3. On Windows, the registry keys
+3. (Windows only) The registry keys
    HKEY_CURRENT_USER\Software\pkg-config\PKG_CONFIG_PATH and
    HKEY_LOCAL_MACHINE\Software\pkg-config\PKG_CONFIG_PATH. For both of these,
    paths should be set as values of the key. The value name has no meaning to
    pkg-config; use it for your own reference. The value type must be REG_SZ (a
    string), and the data should be a single path.
+4. All paths listed in the --with-pc-path option when setup.py is executed, if
+   set. Otherwise, all paths in ${prefix}/lib[64]/pkgconfig/ and
+   ${prefix}/share/pkgconfig/, where ${prefix} is a system prefix (typically
+   this will be /usr/).
 
 If you are using Windows, I recommend you add paths to PKG_CONFIG_PATH. This is
 the easiest place to add paths to and the easiest to check for errors. Google
