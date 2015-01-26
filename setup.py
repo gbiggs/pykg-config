@@ -47,7 +47,7 @@ def check_path_is_dir(p):
                 file=sys.stderr)
 
 
-def split_char(self):
+def split_char():
     # Get the character used to split a list of directories.
     if sys.platform == 'win32':
         return ';'
