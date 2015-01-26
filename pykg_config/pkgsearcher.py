@@ -231,17 +231,19 @@ class PkgSearcher:
                     num_subkeys, num_vals, modified = _winreg.QueryInfoKey(key)
                     for ii in range(num_vals):
                         name, val, type = _winreg.EnumValue(key, ii)
-                        if type == _winreg.REG_SZ:
+                        if type == _winreg.REG_SZ and isdir(val):
                             self._append_packages(val)
                 except WindowsError as e:
                     ErrorPrinter().debug_print('Failed to add paths from \
 {0}\\{1}: {2}'.format(root[1], key_path, e))
                 finally:
                     _winreg.CloseKey(key)
-        # Default path: If a hard-coded path has been set, use that
+        # Default path: If a hard-coded path has been set, use that (excluding
+        # paths that don't exist)
         if pc_path:
             for d in pc_path.split(self._split_char()):
-                self._append_packages(d)
+                if d and isdir(d):
+                    self._append_packages(d)
         # Default path: Else append prefix/lib/pkgconfig, prefix/share/pkgconfig
         else:
             if Options().get_option('is_64bit'):
