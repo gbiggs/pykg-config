@@ -47,6 +47,13 @@ def check_path_is_dir(p):
                 file=sys.stderr)
 
 
+def split_char(self):
+    # Get the character used to split a list of directories.
+    if sys.platform == 'win32':
+        return ';'
+    return ':'
+
+
 class BuildWithConfigure(build_py):
     user_options = build_py.user_options + [
         ('with-pc-path=', None, 'default search path for .pc files'),
@@ -59,7 +66,7 @@ class BuildWithConfigure(build_py):
     def finalize_options(self):
         build_py.finalize_options(self)
         # Split the paths by colon and check individually
-        for p in self.with_pc_path.split(':'):
+        for p in self.with_pc_path.split(split_char()):
             check_path_is_dir(p)
 
     def run(self):
