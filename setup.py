@@ -41,6 +41,12 @@ if sys.platform == 'win32':
     scripts.append('pkg-config.bat')
 
 
+def check_path_is_dir(p):
+    if not os.path.isdir(p):
+        print('Specified PC path {} is not a directory or does not exist'.format(p),
+                file=sys.stderr)
+
+
 class BuildWithConfigure(build_py):
     user_options = build_py.user_options + [
         ('with-pc-path=', None, 'default search path for .pc files'),
@@ -52,7 +58,9 @@ class BuildWithConfigure(build_py):
 
     def finalize_options(self):
         build_py.finalize_options(self)
-        self.ensure_dirname('with_pc_path')
+        # Split the paths by colon and check individually
+        for p in self.with_pc_path.split(':'):
+            check_path_is_dir(p)
 
     def run(self):
         build_py.run(self)
