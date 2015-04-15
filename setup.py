@@ -43,8 +43,7 @@ if sys.platform == 'win32':
 
 def check_path_is_dir(p):
     if not os.path.isdir(p):
-        print('Specified PC path {} is not a directory or does not exist'.format(p),
-                file=sys.stderr)
+        sys.stderr.write('Specified PC path {} is not a directory or does not exist'.format(p))
 
 
 def split_char():
