@@ -191,20 +191,25 @@ class Package:
             self.properties['requires']
         self.properties['conflicts'] = \
                 parse_package_spec_list(props['conflicts'])
-        self._parse_cflags(props['cflags'])
-        self._parse_libs(props['libs'])
-        self._parse_libs(props['libs.private'], dest='private.')
+        self._parse_cflags(props['cflags'], global_variables)
+        self._parse_libs(props['libs'], global_variables)
+        self._parse_libs(props['libs.private'], global_variables, dest='private.')
 
-    def _parse_cflags(self, value):
+    def _parse_cflags(self, value, global_variables):
         flags = shlex.split(value, posix=False)
         for flag in flags:
             if flag.startswith('-I'):
                 if flag[2:] not in \
                         Options().get_option('forbidden_cflags'):
                     # Prepend pc_sysrootdir if necessary
-                    pc_sysrootdir = Options().get_option('pc_sysrootdir')
+                    pc_sysrootdir = global_variables['pc_sysrootdir']
                     if pc_sysrootdir:
-                        include_dir = join(pc_sysrootdir, flag[2:].strip())
+                        # Strip the leading slashes from the flag path
+                        # because os.path.join() will ignore
+                        # pc_sysrootdir if it thinks the flag is an
+                        # absolute path
+                        include_dir = join(pc_sysrootdir,
+                                flag[2:].strip().lstrip('/'))
                     else:
                         include_dir = flag[2:].strip()
                     if Options().get_option('full_compatibility') and \
@@ -222,7 +227,7 @@ class Package:
                 self.properties['other_cflags'].append(flag.strip())
 
 
-    def _parse_libs(self, value, dest=''):
+    def _parse_libs(self, value, global_variables, dest=''):
         # Parse lib flags
         libs = shlex.split(value)
         skip_next = False
@@ -238,9 +243,14 @@ class Package:
                 if lib[2:] not in \
                         Options().get_option('forbidden_libdirs'):
                     # Prepend pc_sysrootdir if necessary
-                    pc_sysrootdir = Options().get_option('pc_sysrootdir')
+                    pc_sysrootdir = global_variables['pc_sysrootdir']
                     if pc_sysrootdir:
-                        libpath = join(pc_sysrootdir, lib[2:].strip())
+                        # Strip the leading slashes from the flag path
+                        # because os.path.join() will ignore
+                        # pc_sysrootdir if it thinks the flag is an
+                        # absolute path
+                        libpath = join(pc_sysrootdir,
+                                lib[2:].strip().lstrip('/'))
                     else:
                         libpath = lib[2:].strip()
                     if Options().get_option('full_compatibility'):
