@@ -40,7 +40,11 @@ from os import getenv, listdir
 from os.path import isdir, isfile, join, split, splitext
 import sys
 if sys.platform == 'win32':
-    import _winreg
+    if sys.version_info[0] < 3:
+        import _winreg
+    else:
+        import winreg as _winreg
+
 
 from pykg_config.exceptions import PykgConfigError
 from pykg_config.options import Options
