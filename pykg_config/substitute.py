@@ -105,6 +105,8 @@ def substitute(value, replacements, globals={}):
 def replace_in_string(value, name, substitution):
     # Replace all instances of name in value with substitution
     to_replace = get_to_replace_re(name)
+    # Make sure backslashes are escaped (e.g. '\g' or '\0', ... are escaped)
+    substitution = substitution.replace('\\', '\\\\')
     return to_replace.sub(substitution, value)
 
 
