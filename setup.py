@@ -78,33 +78,4 @@ class BuildWithConfigure(build_py):
         # build_py.byte_compile())
 
 
-setup(name='pykg-config',
-      version='1.3.0',
-      description='pkg-config replacement.',
-      author='Geoffrey Biggs',
-      author_email='git@killbots.net',
-      url='http://github.com/gbiggs/pykg-config',
-      license='BSD',
-      classifiers=[
-          'Development Status :: 4 - Beta',
-          'Environment :: Console',
-          'Intended Audience :: Developers',
-          'License :: OSI Approved :: BSD License',
-          'Natural Language :: English',
-          'Operating System :: OS Independent',
-          'Programming Language :: Python :: 2.6',
-          'Programming Language :: Python :: 2.7',
-          'Programming Language :: Python :: 3.2',
-          'Programming Language :: Python :: 3.3',
-          'Programming Language :: Python :: 3.4',
-          'Topic :: Software Development',
-          'Topic :: Utilities'
-          ],
-      packages=['pykg_config'],
-      entry_points = {
-        "console_scripts":[
-            "pykg-config=pykg_config.__main__:main"
-        ]
-      },
-      cmdclass={'build_py':BuildWithConfigure}
-      )
+setup(cmdclass={'build_py':BuildWithConfigure})
