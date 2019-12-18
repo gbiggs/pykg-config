@@ -101,16 +101,31 @@ class NotAFileError(BadPathError):
 class NotAPCFileError(BadPathError):
     pass
 
+class TargetTriple:
+    __slots__ = ("arch", "bitness", "os", "abi")
+
+    def __init__(self, arch = None, os = None, abi = None, bitness = None) -> None:
+        pythonTripl = sys.implementation._multiarch.split("-")
+        self.arch = arch if arch is not None else pythonTripl[0]
+        self.os = os if os is not None else pythonTripl[1]
+        self.abi = abi if abi is not None else pythonTripl[2]
+        self.bitness = bitness
+
+    def __str__(self) -> str:
+        return "-".join((self.arch, self.os, self.abi))
+
+thisArchTriple = TargetTriple()
 
 ##############################################################################
 # PkgSearcher object
 
 class PkgSearcher:
-    def __init__(self):
+    def __init__(self, globals):
         # This is a dictionary of packages found in the search path. Each
         # package name is linked to a list of full paths to .pc files, in
         # order of priority. Earlier in the list is preferred over later.
         self._known_pkgs = {}
+        self.globals = globals
 
         self._init_search_dirs()
 
@@ -210,14 +225,14 @@ class PkgSearcher:
 
     def _init_search_dirs(self):
         # Append dirs in PKG_CONFIG_PATH
-        if getenv('PKG_CONFIG_PATH'):
-            for d in getenv('PKG_CONFIG_PATH').split(self._split_char()):
+        if "config_path" in self.globals and self.globals["config_path"]:
+            for d in self.globals["config_path"]:
                 if not d or not isdir(d):
                     continue
                 self._append_packages(d)
         # Append dirs in PKG_CONFIG_LIBDIR
-        if getenv('PKG_CONFIG_LIBDIR'):
-            for d in getenv('PKG_CONFIG_LIBDIR').split(self._split_char()):
+        if "config_libdir" in self.globals and self.globals["config_libdir"]:
+            for d in self.globals["config_libdir"]:
                 if not d or not isdir(d):
                     continue
                 self._append_packages(d)
@@ -244,6 +259,10 @@ class PkgSearcher:
                     _winreg.CloseKey(key)
         # Default path: If a hard-coded path has been set, use that (excluding
         # paths that don't exist)
+        if "prefix" in self.globals:
+            prefix = self.globals["prefix"]
+        else:
+            prefix = sys.prefix
         if pc_path:
             for d in pc_path.split(self._split_char()):
                 if d and isdir(d):
@@ -254,11 +273,16 @@ class PkgSearcher:
                 suffix = '64'
             else:
                 suffix = ''
-            if isdir(join(sys.prefix, 'lib' + suffix + '/pkgconfig')):
-                self._append_packages(join(sys.prefix,
-                                           'lib' + suffix + '/pkgconfig'))
-            if isdir(join(sys.prefix, 'share/pkgconfig')):
-                self._append_packages(join(sys.prefix, 'share/pkgconfig'))
+            dirs2check = (
+                join(prefix, 'lib' + suffix),
+                join(prefix, 'lib', str(thisArchTriple)),
+                join(prefix, 'share'),
+                join(prefix, "lib")
+            )
+            for d in dirs2check:
+                d = join(d, "pkgconfig")
+                if isdir(d):
+                    self._append_packages(d)
 
     def _append_packages(self, d):
         ErrorPrinter().debug_print('Adding .pc files from %s to known packages',

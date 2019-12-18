@@ -198,6 +198,9 @@ def main():
         global_variables['pc_sysrootdir'] = getenv('PKG_CONFIG_SYSROOT_DIR')
     if getenv('PKG_CONFIG_TOP_BUILD_DIR'):
         global_variables['pc_topbuilddir'] = getenv('PKG_CONFIG_TOP_BUILD_DIR')
+    if getenv('PKG_CONFIG_LIBDIR'):
+        global_variables["config_libdir"] = getenv('PKG_CONFIG_LIBDIR').split(self._split_char())
+    
     if getenv('PKG_CONFIG_DISABLE_UNINSTALLED'):
         Options().set_option('prefer_uninstalled', False)
     if getenv('PKG_CONFIG_ALLOW_SYSTEM_LIBS'):
