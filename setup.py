@@ -30,15 +30,13 @@
 __version__ = "$Revision: $"
 # $Source$
 
-from distutils.core import setup
+from setuptools import setup
 from distutils.command.build_py import build_py
 from distutils import log
 import os.path
 import sys
 
 scripts = ['pykg-config.py']
-if sys.platform == 'win32':
-    scripts.append('pkg-config.bat')
 
 
 def check_path_is_dir(p):
@@ -105,6 +103,10 @@ setup(name='pykg-config',
           'Topic :: Utilities'
           ],
       packages=['pykg_config'],
-      scripts=scripts,
+      entry_points = {
+        "console_scripts":[
+            "pykg-config=pykg_config.__main__:main"
+        ]
+      },
       cmdclass={'build_py':BuildWithConfigure}
       )
