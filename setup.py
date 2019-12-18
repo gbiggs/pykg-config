@@ -78,4 +78,4 @@ class BuildWithConfigure(build_py):
         # build_py.byte_compile())
 
 
-setup(cmdclass={'build_py':BuildWithConfigure})
+setup(cmdclass={'build_py':BuildWithConfigure}, use_scm_version=True)
