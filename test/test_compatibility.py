@@ -42,16 +42,18 @@ import random
 import subprocess
 import sys
 import unittest
+import os
+
+from pykg_config.pkgconfig import call_pykgconfig, call_pkgconfig
+
 
 class TestCompatibility(unittest.TestCase):
     def setUp(self):
-        self.packages = [('dbus-1', '1.4.16'),
-                         ('openssl', '1.0.0g'),
-                         ('libxml-2.0', '2.7.8'),
+        self.packages = [('dbus-1', '1.12.20'),
+                         ('openssl', '1.1.1f'),
+                         ('libxml-2.0', '2.9.10'),
                          ('QtCore', '4.7.4')]
         self.error_package = 'thisisabadpkg'
-        self.pykg_config_command = '../pykg-config.py'
-        self.pkg_config_command = 'pkg-config'
 
     def get_random_package(self):
         return random.choice(self.packages)[0]
@@ -76,17 +78,9 @@ class TestCompatibility(unittest.TestCase):
             version = [version[0], str(int(version[1]) - 1)] + version[2:]
         return (pkg[0], '.'.join(version))
 
-    def call_process(self, args):
-        process = subprocess.Popen(args, stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
-        output = process.communicate()
-        output = (output[0].strip(), output[1].strip())
-        return_code = process.returncode
-        return output[0], output[1], return_code
-
     def run_test_case(self, args):
-        lhs_result = self.call_process([self.pykg_config_command] + args)
-        rhs_result = self.call_process([self.pkg_config_command] + args)
+        lhs_result = call_pykgconfig(*args, PYTHONPATH="../")
+        rhs_result = call_pkgconfig(*args)
         return lhs_result, rhs_result
 
     def build_error_msg(self, args, lhs, rhs):
