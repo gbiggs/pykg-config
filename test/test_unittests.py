@@ -72,22 +72,22 @@ class TestVersion(unittest.TestCase):
         versions = []
         for verstring in self.strings:
             versions.append(version.Version(verstring))
-        self.assert_(versions[0] < versions[1])
-        self.assert_(versions[0] < versions[5])
-        self.assert_(versions[0] < versions[6])
-        self.assert_(versions[0] <= versions[0])
-        self.assert_(versions[0] <= versions[1])
-        self.assert_(versions[0] <= versions[4])
-        self.assert_(versions[0] == versions[0])
-        self.assert_(versions[0] == versions[4])
-        self.assert_(versions[1] == versions[1])
-        self.assert_(versions[0] != versions[1])
-        self.assert_(versions[0] != versions[2])
-        self.assert_(versions[0] != versions[3])
-        self.assert_(versions[0] > versions[2])
-        self.assert_(versions[0] >= versions[0])
-        self.assert_(versions[0] >= versions[2])
-        self.assert_(versions[0] >= versions[4])
+        self.assertTrue(versions[0] < versions[1])
+        self.assertTrue(versions[0] < versions[5])
+        self.assertTrue(versions[0] < versions[6])
+        self.assertTrue(versions[0] <= versions[0])
+        self.assertTrue(versions[0] <= versions[1])
+        self.assertTrue(versions[0] <= versions[4])
+        self.assertTrue(versions[0] == versions[0])
+        self.assertTrue(versions[0] == versions[4])
+        self.assertTrue(versions[1] == versions[1])
+        self.assertTrue(versions[0] != versions[1])
+        self.assertTrue(versions[0] != versions[2])
+        self.assertTrue(versions[0] != versions[3])
+        self.assertTrue(versions[0] > versions[2])
+        self.assertTrue(versions[0] >= versions[0])
+        self.assertTrue(versions[0] >= versions[2])
+        self.assertTrue(versions[0] >= versions[4])
 
         self.assertFalse(versions[0] < versions[2])
         self.assertFalse(versions[0] <= versions[2])
@@ -136,7 +136,7 @@ class TestSubstitutions(unittest.TestCase):
 
     def test_get_to_replace_re(self):
         self.assertEqual(substitute.get_to_replace_re('blag'),
-                         re.compile ('(?<!\$)\$\{blag\}', re.U))
+                         re.compile ('(?<!\\$)\\$\\{blag\\}', re.U))
 
     def test_get_all_substitutions(self):
         nameful = '${lots} of ${names} ${reffed}.'
