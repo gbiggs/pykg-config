@@ -202,7 +202,7 @@ class Package:
                 if flag[2:] not in \
                         Options().get_option('forbidden_cflags'):
                     # Prepend pc_sysrootdir if necessary
-                    pc_sysrootdir = global_variables['pc_sysrootdir']
+                    pc_sysrootdir = global_variables.get('pc_sysrootdir', None)
                     if pc_sysrootdir:
                         # Strip the leading slashes from the flag path
                         # because os.path.join() will ignore
@@ -243,7 +243,7 @@ class Package:
                 if lib[2:] not in \
                         Options().get_option('forbidden_libdirs'):
                     # Prepend pc_sysrootdir if necessary
-                    pc_sysrootdir = global_variables['pc_sysrootdir']
+                    pc_sysrootdir = global_variables.get('pc_sysrootdir', None)
                     if pc_sysrootdir:
                         # Strip the leading slashes from the flag path
                         # because os.path.join() will ignore
