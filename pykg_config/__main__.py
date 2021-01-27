@@ -39,12 +39,12 @@ from os import getenv
 import sys
 import traceback
 
-from pykg_config.errorprinter import ErrorPrinter
-from pykg_config.result import PkgCfgResult, NoPackagesSpecifiedError
-from pykg_config.options import Options
-from pykg_config.version import Version
-from pykg_config.pkgsearcher import PackageNotFoundError, NoOpenableFilesError
-from pykg_config.substitute import UndefinedVarError
+from .errorprinter import ErrorPrinter
+from .result import PkgCfgResult, NoPackagesSpecifiedError
+from .options import Options
+from .version import Version
+from .pkgsearcher import PackageNotFoundError, NoOpenableFilesError
+from .substitute import UndefinedVarError
 
 PYKG_CONFIG_VERSION = '1.1.0'
 CORRESPONDING_VERSION = '0.26'
@@ -171,7 +171,8 @@ compiler (cl) format')
     return parser
 
 
-def main(argv):
+def main():
+    argv = sys.argv
     parser = setup_option_parser()
     try:
         options, args = parser.parse_args()
@@ -197,6 +198,9 @@ def main(argv):
         global_variables['pc_sysrootdir'] = getenv('PKG_CONFIG_SYSROOT_DIR')
     if getenv('PKG_CONFIG_TOP_BUILD_DIR'):
         global_variables['pc_topbuilddir'] = getenv('PKG_CONFIG_TOP_BUILD_DIR')
+    if getenv('PKG_CONFIG_LIBDIR'):
+        global_variables["config_libdir"] = getenv('PKG_CONFIG_LIBDIR').split(self._split_char())
+    
     if getenv('PKG_CONFIG_DISABLE_UNINSTALLED'):
         Options().set_option('prefer_uninstalled', False)
     if getenv('PKG_CONFIG_ALLOW_SYSTEM_LIBS'):
@@ -381,7 +385,7 @@ def get_pkg_config_version():
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    main()
 
 # vim: tw=79
 

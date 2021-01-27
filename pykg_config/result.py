@@ -100,7 +100,7 @@ class PkgCfgResult:
         # collections.OrderedDict).
         self.packages = []
         self.searched_packages = []
-        self.searcher = PkgSearcher()
+        self.searcher = PkgSearcher(globals)
         self.globals = globals
 
     def __str__(self):
