@@ -70,7 +70,7 @@ class Options(object):
                         'pc_path': '',
                         'uninstalled_only': False,
                         'prefer_uninstalled': True,
-                        'pc_sysrootdir': '',
+                        'pc_sysrootdir': '/',
                         'pc_topbuilddir': '',
                         'print_errors': True,
                         'short_errors': False,
