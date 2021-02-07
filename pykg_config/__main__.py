@@ -185,8 +185,6 @@ def main():
                                               CORRESPONDING_VERSION))
         sys.exit(0)
 
-    global_variables = {}
-
     zip_name = 'python{0}{1}.zip'.format(sys.version_info[0],
                                           sys.version_info[1])
     for path in sys.path:
@@ -194,13 +192,23 @@ def main():
             Options().set_option('is_64bit', True)
             break
 
-    if getenv('PKG_CONFIG_SYSROOT_DIR'):
-        global_variables['pc_sysrootdir'] = getenv('PKG_CONFIG_SYSROOT_DIR')
-    if getenv('PKG_CONFIG_TOP_BUILD_DIR'):
-        global_variables['pc_topbuilddir'] = getenv('PKG_CONFIG_TOP_BUILD_DIR')
-    if getenv('PKG_CONFIG_LIBDIR'):
-        global_variables["config_libdir"] = getenv('PKG_CONFIG_LIBDIR').split(self._split_char())
-    
+    def splitSerializedList(ls):
+        return ls.split(self._split_char())
+
+    variable_init_spec = {
+        ("pc_sysrootdir", str),
+        ("pc_topbuilddir", str),
+        ("pc_path", splitSerializedList),
+        ("config_libdir", splitSerializedList),
+    }
+
+    global_variables = {}
+
+    for var_name, postprocessor in variable_init_spec:
+        r = look_up_var_in_env(var_name)
+        if r:
+            global_variables[var_name] = postprocessor(r)
+
     if getenv('PKG_CONFIG_DISABLE_UNINSTALLED'):
         Options().set_option('prefer_uninstalled', False)
     if getenv('PKG_CONFIG_ALLOW_SYSTEM_LIBS'):
