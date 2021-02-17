@@ -103,5 +103,25 @@ def call_pykgconfig(*args, **env):
         (sys.executable, "-m", pykg_config_package_name) + args, **env
     )
 
+def call_pkgconfig_get_lines(*args, **env):
+    return call_pkgconfig(*args, **env).splitlines()
+
+def get_default_pc_vars_names():
+    return call_pkgconfig_get_lines("--print-variables", "pkg-config")
+
+def get_default_pc_vars_kv_pairs(*var_names):
+    if not var_names:
+        var_names = get_default_pc_vars_names()
+
+    for var_name in var_names:
+        res = call_pkgconfig_get_str("--variable", var_name, "pkg-config")
+        if res:
+            yield var_name, res
+        else:
+            yield var_name, None
+
+def get_default_pc_vars_dict(*var_names):
+    return dict(get_default_pc_vars_kv_pairs(*var_names))
+
 
 # vim: tw=79
